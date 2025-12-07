@@ -1,28 +1,51 @@
-import { CSSProperties } from 'react';
-import MiniBarChart from './components/MiniBarChart';
-import TrendSparkline from './components/TrendSparkline';
-import {
-  conversationHistory,
-  conversationSummary,
-  moodTrend,
-  overallHealth,
-  patientProfile,
-  topics,
-} from './data/patient';
-import './index.css';
+import { CSSProperties, useState } from "react";
+import MiniBarChart from "./components/MiniBarChart";
+import TrendSparkline from "./components/TrendSparkline";
+import useLiveMetrics from "./hooks/useLiveMetrics";
+import { patientProfile } from "./data/patient";
+import "./index.css";
 
 function App() {
-  const moodPoints = moodTrend.map((item) => item.value);
-  const moodChange = moodPoints[moodPoints.length - 1] - moodPoints[0];
+  const {
+    overallHealth,
+    moodTrend,
+    conversationHistory,
+    topics,
+    conversationSummary,
+    transcript,
+    analyzedAt,
+  } = useLiveMetrics();
+  const [showTranscript, setShowTranscript] = useState(false);
 
-  const weeklyConversationCount = conversationHistory.reduce((total, day) => total + day.count, 0);
-  const totalMinutes = conversationHistory.reduce((total, day) => total + day.count * day.avgMinutes, 0);
-  const avgConversationLength = Math.round(totalMinutes / weeklyConversationCount);
-  const longestConversation = Math.max(...conversationHistory.map((day) => day.longestMinutes));
+  const moodPoints = moodTrend.map((item) => item.value);
+  const moodLabels = moodTrend.map((item) => item.label);
+  const latestMood = moodPoints.length ? moodPoints[moodPoints.length - 1] : 0;
+  const moodChange =
+    moodPoints.length > 1
+      ? moodPoints[moodPoints.length - 1] - moodPoints[0]
+      : 0;
+
+  const weeklyConversationCount = conversationHistory.reduce(
+    (total, day) => total + day.count,
+    0
+  );
+  const totalMinutes = conversationHistory.reduce(
+    (total, day) => total + day.count * day.avgMinutes,
+    0
+  );
+  const avgConversationLength =
+    weeklyConversationCount > 0
+      ? Math.round(totalMinutes / weeklyConversationCount)
+      : 0;
+  const longestConversation =
+    conversationHistory.length > 0
+      ? Math.max(...conversationHistory.map((day) => day.longestMinutes))
+      : 0;
 
   const ringStyle = {
-    '--score': overallHealth.score,
+    "--score": overallHealth?.score ?? 0,
   } as CSSProperties;
+  const healthDelta = overallHealth?.delta ?? 0;
 
   return (
     <div className="app-shell">
@@ -44,8 +67,12 @@ function App() {
 
       <section className="hero-grid">
         <div className="card health-card">
-          <div className="score-ring" style={ringStyle}>
-            <span>{overallHealth.score}</span>
+          <div
+            className="score-ring"
+            style={ringStyle}
+            title={`Overall health score: ${overallHealth?.score ?? 0}`}
+          >
+            <span>{overallHealth?.score ?? 0}</span>
           </div>
           <div className="stack">
             <div className="card-header">
@@ -53,9 +80,12 @@ function App() {
                 <div className="section-title">Overall health score</div>
                 <h3>Semantic wellness</h3>
               </div>
-              <span className="pill change">+{overallHealth.delta} pts</span>
+              <span className="pill change">
+                {healthDelta >= 0 ? "+" : ""}
+                {healthDelta} pts
+              </span>
             </div>
-            <p className="summary">{overallHealth.summary}</p>
+            <p className="summary">{overallHealth?.summary}</p>
             <div className="kpis">
               <div className="kpi">
                 <small>Last voice check-in</small>
@@ -71,18 +101,24 @@ function App() {
               <div className="section-title">Voice presence</div>
               <h3>Today&apos;s touch points</h3>
             </div>
-            <span className="badge">{weeklyConversationCount} calls this week</span>
+            <span className="badge">
+              {weeklyConversationCount} calls this week
+            </span>
           </div>
           <div className="touchpoints-body">
             <div className="touchpoints-info">
               <p className="summary">{conversationSummary.headline}</p>
               <ul className="bullet-list">
-                {conversationSummary.highlights.map((item) => (
+                {(conversationSummary.highlights ?? []).map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
               <div className="footer-actions">
-                <button className="ghost-button" type="button">
+                <button
+                  className="ghost-button"
+                  type="button"
+                  onClick={() => setShowTranscript(true)}
+                >
                   Review transcript
                 </button>
               </div>
@@ -90,8 +126,8 @@ function App() {
             <div className="touchpoints-metrics">
               <div className="kpi">
                 <small>Mood shift (7d)</small>
-                <strong className={moodChange >= 0 ? 'change' : 'change down'}>
-                  {moodChange >= 0 ? '+' : ''}
+                <strong className={moodChange >= 0 ? "change" : "change down"}>
+                  {moodChange >= 0 ? "+" : ""}
                   {moodChange} pts
                 </strong>
               </div>
@@ -115,16 +151,23 @@ function App() {
               <div className="section-title">Mood score</div>
               <h3>Calm & uplifted</h3>
             </div>
-            <span className={moodChange >= 0 ? 'pill change' : 'pill change down'}>
-              {moodChange >= 0 ? '+' : ''}
+            <span
+              className={moodChange >= 0 ? "pill change" : "pill change down"}
+            >
+              {moodChange >= 0 ? "+" : ""}
               {moodChange} pts
             </span>
           </div>
-          <TrendSparkline points={moodPoints} stroke="#2563eb" fill="rgba(37, 99, 235, 0.1)" />
+          <TrendSparkline
+            points={moodPoints}
+            labels={moodLabels}
+            stroke="#2563eb"
+            fill="rgba(37, 99, 235, 0.1)"
+          />
           <div className="small-grid">
             <div className="kpi">
               <small>Current mood score</small>
-              <strong>{moodPoints[moodPoints.length - 1]} / 100</strong>
+              <strong>{latestMood} / 100</strong>
             </div>
             <div className="kpi">
               <small>7d trajectory</small>
@@ -147,7 +190,13 @@ function App() {
               value: day.avgMinutes,
               hint: `${day.count} calls · ${day.avgMinutes}m avg`,
             }))}
-            maxValue={Math.max(...conversationHistory.map((day) => day.longestMinutes))}
+            maxValue={
+              conversationHistory.length
+                ? Math.max(
+                    ...conversationHistory.map((day) => day.longestMinutes)
+                  )
+                : 0
+            }
           />
           <div className="small-grid">
             <div className="kpi">
@@ -179,7 +228,11 @@ function App() {
                 <div>
                   <div>{topic.name}</div>
                   <div className="topic-bar">
-                    <div className="topic-fill" style={{ width: `${topic.percent}%` }} />
+                    <div
+                      className="topic-fill"
+                      style={{ width: `${topic.percent}%` }}
+                      title={`${topic.name}: ${topic.percent}% (${topic.sentiment})`}
+                    />
                   </div>
                 </div>
                 <span className="tag" data-tone={topic.sentiment}>
@@ -196,8 +249,94 @@ function App() {
           </div>
         </div>
 
-
+        <div className="card summary-card">
+          <div className="card-header">
+            <div>
+              <div className="section-title">Conversation summary</div>
+              <h3>Agent recap</h3>
+            </div>
+            <div className="pill">
+              <span className="status-dot" />
+              Stable
+            </div>
+          </div>
+          <p className="summary">{conversationSummary.headline}</p>
+          <div>
+            <div className="section-title">Highlights</div>
+            <ul className="bullet-list">
+              {(conversationSummary.highlights ?? []).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className="section-title">Follow-ups</div>
+            <ul className="bullet-list">
+              {(conversationSummary.followUps ?? []).map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </section>
+
+      {/* Transcript Modal */}
+      {showTranscript && (
+        <div className="modal-overlay" onClick={() => setShowTranscript(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <h3>Latest Conversation Transcript</h3>
+                {analyzedAt && (
+                  <p className="modal-subtitle">
+                    {new Date(analyzedAt).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                )}
+              </div>
+              <button
+                className="modal-close"
+                onClick={() => setShowTranscript(false)}
+                aria-label="Close modal"
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              {transcript ? (
+                <div className="transcript-content">
+                  {transcript.split("\n").map((line, index) => {
+                    const isAda = line.toLowerCase().startsWith("ada:");
+                    const isPatient =
+                      line.toLowerCase().startsWith("marian:") ||
+                      line.toLowerCase().startsWith("patient:");
+                    return (
+                      <p
+                        key={index}
+                        className={`transcript-line ${
+                          isAda ? "ada" : isPatient ? "patient" : ""
+                        }`}
+                      >
+                        {line}
+                      </p>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="no-transcript">
+                  No transcript available for the latest conversation.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

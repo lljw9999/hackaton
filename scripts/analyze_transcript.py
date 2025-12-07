@@ -47,16 +47,14 @@ def build_messages(transcript: str):
   ]
 
 
-def analyze_transcript(transcript_path: str, model: str) -> Dict:
+def analyze_text(transcript: str, model: str) -> Dict:
   load_env()
   api_key = os.environ.get("OPENAI_API_KEY")
   if not api_key:
     raise RuntimeError("OPENAI_API_KEY not set. Add it to your environment or .env file.")
 
-  with open(transcript_path, "r", encoding="utf-8") as f:
-    transcript = f.read()
   if not transcript.strip():
-    raise ValueError("Transcript file is empty.")
+    raise ValueError("Transcript content is empty.")
 
   client = OpenAI(api_key=api_key)
   messages = build_messages(transcript)
@@ -73,6 +71,12 @@ def analyze_transcript(transcript_path: str, model: str) -> Dict:
     return json.loads(content)
   except json.JSONDecodeError as exc:
     raise ValueError(f"Model response was not valid JSON: {content}") from exc
+
+
+def analyze_transcript(transcript_path: str, model: str) -> Dict:
+  with open(transcript_path, "r", encoding="utf-8") as f:
+    transcript = f.read()
+  return analyze_text(transcript, model)
 
 
 def main():

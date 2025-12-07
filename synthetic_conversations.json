@@ -1,0 +1,147 @@
+[
+  {
+    "_id": "6935e6ccec999412779649a1",
+    "sessionId": "session_1765140112450",
+    "startTime": "2025-12-07T20:45:12.311000",
+    "events": [
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "Good morning, Marian. How did you sleep last night?",
+        "timestamp": "2025-12-07T20:45:15.100000",
+        "_id": "6935e6ccec999412779649a2"
+      },
+      {
+        "type": "message",
+        "role": "user",
+        "text": "Oh, much better, thank you. I didn't wake up at all, which is rare for me.",
+        "timestamp": "2025-12-07T20:45:22.450000",
+        "_id": "6935e6ccec999412779649a3"
+      },
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "That sounds wonderful! Getting a full night's rest can really make a difference. Did you manage to take your blood pressure medication with breakfast?",
+        "timestamp": "2025-12-07T20:45:25.800000",
+        "_id": "6935e6ccec999412779649a4"
+      },
+      {
+        "type": "message",
+        "role": "user",
+        "text": "Yes, I did. And I had a banana too.",
+        "timestamp": "2025-12-07T20:45:30.150000",
+        "_id": "6935e6ccec999412779649a5"
+      },
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "Perfect. Keeping up with that routine is so important. How is your energy level for a short walk today?",
+        "timestamp": "2025-12-07T20:45:33.600000",
+        "_id": "6935e6ccec999412779649a6"
+      }
+    ],
+    "createdAt": "2025-12-07T20:45:12.311000",
+    "updatedAt": "2025-12-07T20:45:33.700000",
+    "__v": 0
+  },
+  {
+    "_id": "6935e6ccec999412779649b1",
+    "sessionId": "session_1765140892120",
+    "startTime": "2025-12-06T09:15:00.000000",
+    "events": [
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "Hi Marian, just checking in. Have you had any water this morning?",
+        "timestamp": "2025-12-06T09:15:02.000000",
+        "_id": "6935e6ccec999412779649b2"
+      },
+      {
+        "type": "message",
+        "role": "user",
+        "text": "I haven't yet, actually. I've been a bit busy with the garden.",
+        "timestamp": "2025-12-06T09:15:10.500000",
+        "_id": "6935e6ccec999412779649b3"
+      },
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "Gardening is great exercise, but remember to stay hydrated! Maybe take a quick break for a glass of water now?",
+        "timestamp": "2025-12-06T09:15:14.200000",
+        "_id": "6935e6ccec999412779649b4"
+      },
+      {
+        "type": "message",
+        "role": "user",
+        "text": "You're right. I'll go get one now.",
+        "timestamp": "2025-12-06T09:15:18.800000",
+        "_id": "6935e6ccec999412779649b5"
+      }
+    ],
+    "createdAt": "2025-12-06T09:15:00.000000",
+    "updatedAt": "2025-12-06T09:15:19.000000",
+    "__v": 0
+  },
+  {
+    "_id": "6935e6ccec999412779649c1",
+    "sessionId": "session_1765140950000",
+    "startTime": "2025-12-05T14:30:00.000000",
+    "events": [
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "Hello Marian, how are you feeling this afternoon?",
+        "timestamp": "2025-12-05T14:30:03.000000",
+        "_id": "6935e6ccec999412779649c2"
+      },
+      {
+        "type": "message",
+        "role": "user",
+        "text": "A bit down, to be honest. My neighbour didn't visit as planned, and I feel lonely.",
+        "timestamp": "2025-12-05T14:30:15.000000",
+        "_id": "6935e6ccec999412779649c3"
+      },
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "I'm truly sorry to hear that, Marian. It's completely understandable to feel down when plans change and you're looking forward to company. Is there anything I can do to help lift your spirits?",
+        "timestamp": "2025-12-05T14:30:20.000000",
+        "_id": "6935e6ccec999412779649c4"
+      }
+    ],
+    "createdAt": "2025-12-05T14:30:00.000000",
+    "updatedAt": "2025-12-05T14:30:20.000000",
+    "__v": 0
+  },
+  {
+    "_id": "6935e6ccec999412779649d1",
+    "sessionId": "session_1765141000000",
+    "startTime": "2025-12-04T08:00:00.000000",
+    "events": [
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "Good morning, Marian. Did you remember your morning stretches today?",
+        "timestamp": "2025-12-04T08:00:05.000000",
+        "_id": "6935e6ccec999412779649d2"
+      },
+      {
+        "type": "message",
+        "role": "user",
+        "text": "Yes, I did them right after my coffee. My back feels much better for it!",
+        "timestamp": "2025-12-04T08:00:12.000000",
+        "_id": "6935e6ccec999412779649d3"
+      },
+      {
+        "type": "message",
+        "role": "assistant",
+        "text": "That's fantastic to hear! Consistency with your stretches really pays off. How about your meal plan for today?",
+        "timestamp": "2025-12-04T08:00:15.000000",
+        "_id": "6935e6ccec999412779649d4"
+      }
+    ],
+    "createdAt": "2025-12-04T08:00:00.000000",
+    "updatedAt": "2025-12-04T08:00:15.000000",
+    "__v": 0
+  }
+]

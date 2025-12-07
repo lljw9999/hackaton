@@ -4,12 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run start:server\" \"npm run dev:client\"",
+    "dev:client": "vite",
+    "start:server": "node server.js",
+    "api": "node server/analytics-server.js",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint ."
   },
   "dependencies": {
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "mongodb": "^6.21.0",
     "openai": "^6.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
