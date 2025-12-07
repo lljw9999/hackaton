@@ -1,0 +1,343 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #F6F6F9;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #1C1C1C;
+}
+
+.container {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 420px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #1C1C1C;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+
+.status {
+    color: #4A65D9;
+    font-size: 16px;
+    margin-bottom: 30px;
+    font-weight: 500;
+    min-height: 24px;
+}
+
+/* Main Call ADA Button */
+.main-call-btn {
+    width: 100%;
+    height: 90px;
+    font-size: 28px;
+    font-weight: bold;
+    background: #4A65D9;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(74, 101, 217, 0.25);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.main-call-btn:hover {
+    background: #3A55C9;
+    box-shadow: 0 8px 20px rgba(74, 101, 217, 0.35);
+    transform: translateY(-2px);
+}
+
+.main-call-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(74, 101, 217, 0.25);
+}
+
+.main-call-btn.recording {
+    background: #E74C3C;
+    animation: pulse-button 2s infinite;
+}
+
+.main-call-btn.recording:hover {
+    background: #D63A2A;
+}
+
+.main-call-btn.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.button-icon {
+    width: 32px;
+    height: 32px;
+    stroke-width: 2.5;
+}
+
+.button-text {
+    font-size: 28px;
+}
+
+/* Recording Indicator */
+.recording-indicator {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #E74C3C;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.pulse {
+    width: 14px;
+    height: 14px;
+    background: #E74C3C;
+    border-radius: 50%;
+    animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-button {
+    0%, 100% {
+        box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
+    }
+    50% {
+        box-shadow: 0 8px 25px rgba(231, 76, 60, 0.5);
+    }
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.4);
+    }
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background: #E0E0E0;
+    margin: 40px 0 25px 0;
+}
+
+/* Section Title */
+.section-title {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    color: #444;
+    font-weight: 500;
+}
+
+/* Contact Buttons - iOS Style */
+.contact-btn {
+    width: 100%;
+    height: 70px;
+    font-size: 20px;
+    font-weight: 500;
+    background: white;
+    color: #1C1C1C;
+    border: 1px solid #E0E0E0;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    text-align: left;
+}
+
+.contact-btn:hover {
+    background: #F8F9FA;
+    border-color: #4A65D9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(74, 101, 217, 0.1);
+}
+
+.contact-btn:active {
+    transform: translateY(0);
+    background: #F0F4FF;
+}
+
+/* Contact Avatar (Profile Picture Bubble) */
+.contact-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background: #E0E0E0;
+    border: 2px solid #F0F0F0;
+}
+
+.avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-initials {
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.avatar-icon {
+    color: white;
+    width: 28px;
+    height: 28px;
+}
+
+/* Contact Info (Name and Relation) */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    gap: 2px;
+}
+
+.contact-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1C1C1C;
+    line-height: 1.2;
+}
+
+.contact-relation {
+    font-size: 16px;
+    font-weight: 400;
+    color: #666;
+    line-height: 1.2;
+}
+
+/* Contact Arrow (iOS style chevron) */
+.contact-arrow {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5;
+    color: #999;
+    flex-shrink: 0;
+}
+
+.contact-btn:hover .contact-arrow {
+    color: #4A65D9;
+}
+
+/* Transcript (Hidden by default, can be shown if needed) */
+.transcript {
+    margin-top: 30px;
+    text-align: left;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 20px;
+    background: #F0F0F0;
+    border-radius: 15px;
+    display: none;
+    font-size: 16px;
+}
+
+.transcript.active {
+    display: block;
+}
+
+.transcript-item {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.transcript-item.user {
+    background: #E3F2FD;
+    text-align: right;
+}
+
+.transcript-item.ada {
+    background: #F3E5F5;
+}
+
+.transcript-item strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #4A65D9;
+    font-size: 18px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 40px;
+    }
+    
+    .subtitle {
+        font-size: 18px;
+    }
+    
+    .main-call-btn {
+        height: 80px;
+        font-size: 24px;
+    }
+    
+    .button-text {
+        font-size: 24px;
+    }
+    
+    .contact-btn {
+        height: 65px;
+        padding: 0 12px;
+        gap: 12px;
+    }
+    
+    .contact-avatar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .avatar-initials {
+        font-size: 20px;
+    }
+    
+    .contact-name {
+        font-size: 18px;
+    }
+    
+    .contact-relation {
+        font-size: 14px;
+    }
+}
