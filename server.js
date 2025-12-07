@@ -61,25 +61,29 @@ app.get('/api/patient-data', async (req, res) => {
     let transcript = null;
     let conversationDate = null;
 
-    const latestConversation = await db.collection('conversations')
-      .find({ events: { $exists: true, $not: { $size: 0 } } })
+    // Simple query - just get latest conversations and filter
+    const conversations = await db.collection('conversations')
+      .find({})
       .sort({ createdAt: -1 })
-      .limit(1)
+      .limit(5)
       .toArray();
 
-    if (latestConversation.length > 0) {
-      const conv = latestConversation[0];
-      conversationDate = conv.createdAt || conv.startTime;
-      
-      // Build transcript from events array
-      if (conv.events && Array.isArray(conv.events)) {
-        transcript = conv.events
-          .filter(e => e.type === 'message' && e.text)
-          .map(e => {
-            const speaker = e.role === 'assistant' ? 'Ada' : 'Patient';
-            return `${speaker}: ${e.text}`;
-          })
-          .join('\n\n');
+    // Find first conversation with events
+    for (const conv of conversations) {
+      if (conv.events && Array.isArray(conv.events) && conv.events.length > 0) {
+        conversationDate = conv.createdAt || conv.startTime;
+        
+        // Build transcript from events array
+        const messages = conv.events.filter(e => e.type === 'message' && e.text);
+        if (messages.length > 0) {
+          transcript = messages
+            .map(e => {
+              const speaker = e.role === 'assistant' ? 'Ada' : 'Patient';
+              return `${speaker}: ${e.text}`;
+            })
+            .join('\n\n');
+          break; // Found a valid transcript
+        }
       }
     }
 
@@ -103,35 +107,36 @@ app.get('/api/transcript', async (req, res) => {
   }
 
   try {
-    const latestConversation = await db.collection('conversations')
-      .find({ events: { $exists: true, $not: { $size: 0 } } })
+    // Get recent conversations
+    const conversations = await db.collection('conversations')
+      .find({})
       .sort({ createdAt: -1 })
-      .limit(1)
+      .limit(5)
       .toArray();
 
-    if (latestConversation.length === 0) {
-      return res.json({ transcript: null, createdAt: null });
+    // Find first conversation with valid events
+    for (const conv of conversations) {
+      if (conv.events && Array.isArray(conv.events) && conv.events.length > 0) {
+        const messages = conv.events.filter(e => e.type === 'message' && e.text);
+        if (messages.length > 0) {
+          const transcript = messages
+            .map(e => {
+              const speaker = e.role === 'assistant' ? 'Ada' : 'Patient';
+              return `${speaker}: ${e.text}`;
+            })
+            .join('\n\n');
+
+          return res.json({
+            transcript: transcript,
+            createdAt: conv.createdAt || conv.startTime,
+            sessionId: conv.sessionId,
+          });
+        }
+      }
     }
 
-    const conv = latestConversation[0];
-    let transcript = null;
-
-    // Build transcript from events array
-    if (conv.events && Array.isArray(conv.events)) {
-      transcript = conv.events
-        .filter(e => e.type === 'message' && e.text)
-        .map(e => {
-          const speaker = e.role === 'assistant' ? 'Ada' : 'Patient';
-          return `${speaker}: ${e.text}`;
-        })
-        .join('\n\n');
-    }
-
-    res.json({
-      transcript: transcript,
-      createdAt: conv.createdAt || conv.startTime,
-      sessionId: conv.sessionId,
-    });
+    // No valid transcript found
+    res.json({ transcript: null, createdAt: null });
   } catch (err) {
     console.error('Error fetching transcript', err);
     res.status(500).json({ error: 'Internal server error' });
