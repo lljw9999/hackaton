@@ -104,7 +104,7 @@ All conversations are saved to text files in the `conversations/` directory, org
 ngoDB configuration
 - `CHATGPT_PROMPT_PREDEFINED_QUESTIONS.md` - Prompt for adding medication/PT reminders
 <img width="422" height="806" alt="Screenshot 2025-12-07 at 6 16 59 PM" src="https://github.com/user-attachments/assets/1e3e9602-bed0-41c5-abf3-4747254e3a01" />
-## Troubleshooting
+
 
 <img width="1512" height="982" alt="Screenshot 2025-12-07 at 6 17 03 PM" src="https://github.com/user-attachments/assets/c265b4ab-1e0d-471b-9d1b-8d55221373cc" />
 
