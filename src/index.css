@@ -492,6 +492,150 @@ h1, h2, h3, h4, h5 {
   gap: 16px;
 }
 
+/* Call Logs styles */
+.call-logs-section {
+  margin-top: 24px;
+}
+
+.call-logs-card {
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.call-logs-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.call-log-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+
+.call-log-item:hover {
+  background: #f3f4f6;
+}
+
+.call-log-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--card-stroke);
+}
+
+.call-direction {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.call-direction.outbound {
+  color: var(--accent);
+}
+
+.call-direction.inbound {
+  color: var(--accent-2);
+}
+
+.call-log-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.call-log-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.call-recipient {
+  font-weight: 600;
+  color: #111827;
+  font-size: 14px;
+}
+
+.call-status {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.call-status.completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.call-status.missed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.call-status.in-progress,
+.call-status.ongoing {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.call-status.scheduled {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.call-log-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.call-time {
+  font-weight: 500;
+}
+
+.call-duration {
+  color: #6b7280;
+}
+
+.call-phone {
+  color: #9ca3af;
+}
+
+.call-summary {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.no-calls {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+
+.no-calls p {
+  margin: 0;
+  font-size: 14px;
+}
+
 /* Modal styles */
 .modal-overlay {
   position: fixed;

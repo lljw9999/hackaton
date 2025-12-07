@@ -7,6 +7,19 @@ import {
   topics as fallbackTopics,
 } from '../data/patient';
 
+export type CallLog = {
+  id: string;
+  recipientName: string;
+  recipientPhone?: string | null;
+  callerName: string;
+  startTime: string;
+  endTime?: string | null;
+  duration?: number | null;
+  status: string;
+  direction: string;
+  summary?: string | null;
+};
+
 export type Metrics = {
   overallHealth: { score: number; delta?: number; summary?: string };
   moodTrend: { label: string; value: number }[];
@@ -15,6 +28,7 @@ export type Metrics = {
   conversationSummary: { headline?: string; highlights?: string[]; followUps?: string[] };
   transcript?: string | null;
   analyzedAt?: string | null;
+  callLogs: CallLog[];
 };
 
 const fallbackMetrics: Metrics = {
@@ -25,6 +39,7 @@ const fallbackMetrics: Metrics = {
   conversationSummary: fallbackConversationSummary,
   transcript: null,
   analyzedAt: null,
+  callLogs: [],
 };
 
 const mergeMetrics = (incoming: Partial<Metrics>): Metrics => ({
@@ -37,6 +52,7 @@ const mergeMetrics = (incoming: Partial<Metrics>): Metrics => ({
   conversationSummary: { ...fallbackMetrics.conversationSummary, ...incoming.conversationSummary },
   transcript: incoming.transcript ?? fallbackMetrics.transcript,
   analyzedAt: incoming.analyzedAt ?? fallbackMetrics.analyzedAt,
+  callLogs: incoming.callLogs ?? fallbackMetrics.callLogs,
 });
 
 export default function useLiveMetrics() {
@@ -47,18 +63,31 @@ export default function useLiveMetrics() {
 
     const hydrate = async () => {
       try {
-        // Use absolute URL to API server (bypasses Vite proxy)
-        const res = await fetch('http://localhost:3001/api/patient-data');
-        if (!res.ok) throw new Error(`status ${res.status}`);
-        const data = (await res.json()) as Partial<Metrics>;
-        console.log('✅ Loaded live data from MongoDB:', data);
-        if (!cancelled) setMetrics((prev) => mergeMetrics({ ...prev, ...data }));
+        // Fetch patient data and call logs in parallel
+        const [patientRes, callLogsRes] = await Promise.all([
+          fetch('http://localhost:3001/api/patient-data'),
+          fetch('http://localhost:3001/api/call-logs'),
+        ]);
+
+        if (!patientRes.ok) throw new Error(`patient-data status ${patientRes.status}`);
+        const patientData = (await patientRes.json()) as Partial<Metrics>;
+        
+        let callLogs: CallLog[] = [];
+        if (callLogsRes.ok) {
+          const callData = await callLogsRes.json();
+          callLogs = callData.calls || [];
+        }
+
+        console.log('✅ Loaded live data from MongoDB:', { ...patientData, callLogs });
+        if (!cancelled) {
+          setMetrics((prev) => mergeMetrics({ ...prev, ...patientData, callLogs }));
+        }
       } catch (err) {
         console.warn('Falling back to mock data; fetch failed', err);
       }
     };
 
-    // Poll for updates every 10 seconds
+    // Poll for updates every 5 seconds
     const poll = () => {
       if (!cancelled) {
         hydrate();
@@ -66,7 +95,7 @@ export default function useLiveMetrics() {
     };
 
     hydrate();
-    const interval = setInterval(poll, 10000);
+    const interval = setInterval(poll, 5000);
 
     return () => {
       cancelled = true;

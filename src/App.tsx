@@ -14,6 +14,7 @@ function App() {
     conversationSummary,
     transcript,
     analyzedAt,
+    callLogs,
   } = useLiveMetrics();
   const [showTranscript, setShowTranscript] = useState(false);
 
@@ -276,6 +277,70 @@ function App() {
                 <li key={item}>{item}</li>
               ))}
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Call Logs Section */}
+      <section className="call-logs-section">
+        <div className="card call-logs-card">
+          <div className="card-header">
+            <div>
+              <div className="section-title">Call tracking</div>
+              <h3>Recent calls</h3>
+            </div>
+            <span className="badge">{callLogs.length} calls</span>
+          </div>
+          <div className="call-logs-list">
+            {callLogs.length > 0 ? (
+              callLogs.map((call) => (
+                <div key={call.id} className="call-log-item">
+                  <div className="call-log-icon">
+                    <span className={`call-direction ${call.direction}`}>
+                      {call.direction === "outbound" ? "↗" : "↙"}
+                    </span>
+                  </div>
+                  <div className="call-log-details">
+                    <div className="call-log-header">
+                      <span className="call-recipient">
+                        {call.recipientName}
+                      </span>
+                      <span className={`call-status ${call.status}`}>
+                        {call.status}
+                      </span>
+                    </div>
+                    <div className="call-log-meta">
+                      <span className="call-time">
+                        {new Date(call.startTime).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      {call.duration && (
+                        <span className="call-duration">
+                          {Math.floor(call.duration / 60)}m {call.duration % 60}
+                          s
+                        </span>
+                      )}
+                      {call.recipientPhone && (
+                        <span className="call-phone">
+                          {call.recipientPhone}
+                        </span>
+                      )}
+                    </div>
+                    {call.summary && (
+                      <p className="call-summary">{call.summary}</p>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-calls">
+                <p>No call logs available</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

@@ -47,7 +47,6 @@ app.get('/api/patient-data', async (req, res) => {
 
   try {
     // Fetch the most recent semantic analysis
-    // Sorting by analyzedAt descending
     const latestAnalysis = await db.collection('conversation_semantics')
       .find({})
       .sort({ analyzedAt: -1 })
@@ -58,11 +57,36 @@ app.get('/api/patient-data', async (req, res) => {
       return res.status(404).json({ error: 'No data found' });
     }
 
-    // Include transcript if available
+    // Get the latest conversation with events to build transcript
+    let transcript = null;
+    let conversationDate = null;
+
+    const latestConversation = await db.collection('conversations')
+      .find({ events: { $exists: true, $not: { $size: 0 } } })
+      .sort({ createdAt: -1 })
+      .limit(1)
+      .toArray();
+
+    if (latestConversation.length > 0) {
+      const conv = latestConversation[0];
+      conversationDate = conv.createdAt || conv.startTime;
+      
+      // Build transcript from events array
+      if (conv.events && Array.isArray(conv.events)) {
+        transcript = conv.events
+          .filter(e => e.type === 'message' && e.text)
+          .map(e => {
+            const speaker = e.role === 'assistant' ? 'Ada' : 'Patient';
+            return `${speaker}: ${e.text}`;
+          })
+          .join('\n\n');
+      }
+    }
+
     const result = {
       ...latestAnalysis[0].analysis,
-      transcript: latestAnalysis[0].transcript || null,
-      analyzedAt: latestAnalysis[0].analyzedAt || null,
+      transcript: transcript,
+      analyzedAt: latestAnalysis[0].analyzedAt || conversationDate || null,
     };
 
     res.json(result);
@@ -72,29 +96,109 @@ app.get('/api/patient-data', async (req, res) => {
   }
 });
 
-// Get latest transcript
+// Get latest transcript - build from events array
 app.get('/api/transcript', async (req, res) => {
   if (!db) {
     return res.status(500).json({ error: 'Database not connected' });
   }
 
   try {
-    const latestAnalysis = await db.collection('conversation_semantics')
-      .find({})
-      .sort({ analyzedAt: -1 })
+    const latestConversation = await db.collection('conversations')
+      .find({ events: { $exists: true, $not: { $size: 0 } } })
+      .sort({ createdAt: -1 })
       .limit(1)
       .toArray();
 
-    if (latestAnalysis.length === 0) {
-      return res.status(404).json({ error: 'No transcript found' });
+    if (latestConversation.length === 0) {
+      return res.json({ transcript: null, createdAt: null });
+    }
+
+    const conv = latestConversation[0];
+    let transcript = null;
+
+    // Build transcript from events array
+    if (conv.events && Array.isArray(conv.events)) {
+      transcript = conv.events
+        .filter(e => e.type === 'message' && e.text)
+        .map(e => {
+          const speaker = e.role === 'assistant' ? 'Ada' : 'Patient';
+          return `${speaker}: ${e.text}`;
+        })
+        .join('\n\n');
     }
 
     res.json({
-      transcript: latestAnalysis[0].transcript || 'No transcript available',
-      analyzedAt: latestAnalysis[0].analyzedAt || null,
+      transcript: transcript,
+      createdAt: conv.createdAt || conv.startTime,
+      sessionId: conv.sessionId,
     });
   } catch (err) {
     console.error('Error fetching transcript', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Debug endpoint to see collection structure
+app.get('/api/debug/collections', async (req, res) => {
+  if (!db) {
+    return res.status(500).json({ error: 'Database not connected' });
+  }
+
+  try {
+    const collections = await db.listCollections().toArray();
+    const result = {};
+    
+    for (const col of collections) {
+      const sample = await db.collection(col.name).findOne({});
+      result[col.name] = {
+        fields: sample ? Object.keys(sample) : [],
+        sample: sample,
+      };
+    }
+
+    res.json(result);
+  } catch (err) {
+    console.error('Error in debug', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get call tracking data
+app.get('/api/call-logs', async (req, res) => {
+  if (!db) {
+    return res.status(500).json({ error: 'Database not connected' });
+  }
+
+  try {
+    // Fetch recent calls from calltrackings collection (plural)
+    const callLogs = await db.collection('calltrackings')
+      .find({})
+      .sort({ createdAt: -1, date: -1, timestamp: -1 })
+      .limit(20)
+      .toArray();
+
+    // Format the call logs based on actual schema
+    // Schema: { target, date, timestamp, sessionId, createdAt, updatedAt }
+    const formattedLogs = callLogs.map(call => ({
+      id: call._id?.toString() || call.sessionId,
+      recipientName: call.target || call.recipientName || call.patientName || 'Unknown',
+      recipientPhone: call.phoneNumber || call.recipientPhone || null,
+      callerName: call.callerName || call.from || 'Ada',
+      startTime: call.date || call.timestamp || call.createdAt,
+      endTime: call.endTime || null,
+      duration: call.duration || call.durationSeconds || null,
+      status: call.status || 'completed',
+      direction: call.direction || 'outbound',
+      summary: call.summary || call.notes || null,
+      sessionId: call.sessionId || null,
+    }));
+
+    res.json({
+      calls: formattedLogs,
+      totalCalls: callLogs.length,
+    });
+  } catch (err) {
+    console.error('Error fetching call logs', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
