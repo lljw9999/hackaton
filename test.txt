@@ -1,0 +1,29 @@
+Ada: Good morning, Marian. How are you feeling today?
+Marian: I'm feeling pretty good, actually. I slept much better last night.
+Ada: That is wonderful news. Did you manage to take your blood pressure medication this morning?
+Marian: Yes, I did. Right with my breakfast.
+Ada: Excellent. And how is your hydration?
+Marian: I've had two glasses of water so far.
+Ada: Keep it up! Remember to do your seated stretches later.
+Marian: I will. Thank you, Ada.
+Ada: How has your energy level been this week compared to last week?
+Marian: I'd say it's improved. I've been able to do more around the house without feeling exhausted.
+Ada: That's great progress. Have you noticed any changes in your appetite?
+Marian: Yes, actually. I've been eating more regularly and enjoying my meals.
+Ada: Wonderful. Are you still experiencing any dizziness when you stand up?
+Marian: Not as much. Maybe once or twice this week, but it passes quickly.
+Ada: Good to hear. Make sure you're still taking your time when standing. How about your mood? Any feelings of anxiety or sadness?
+Marian: I've been feeling more positive lately. I think the better sleep is really helping.
+Ada: Sleep is so important for overall wellbeing. Have you been able to connect with your daughter this week?
+Marian: Yes, she called yesterday and we talked for almost an hour. It was lovely.
+Ada: That's wonderful, Marian. Social connection is vital. Now, let's talk about your exercise routine. Have you been doing your walks?
+Marian: I've walked around the garden three times this week. Not as much as I'd like, but it's something.
+Ada: That's excellent! Three times is a great achievement. Remember, consistency is more important than intensity.
+Marian: You're right. I'll try to keep it up.
+Ada: Before we finish, is there anything that's been worrying you or that you'd like to discuss?
+Marian: Well, I have been a bit concerned about my upcoming doctor's appointment next week.
+Ada: That's understandable. Would you like me to help you prepare a list of questions or topics to discuss with your doctor?
+Marian: That would be helpful, yes.
+Ada: Perfect. We can work on that together tomorrow. For now, remember to take your afternoon medication and stay hydrated.
+Marian: I will. Thank you so much for checking in, Ada.
+Ada: You're very welcome, Marian. I'll talk to you again this evening. Take care.
