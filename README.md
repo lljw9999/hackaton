@@ -1,4 +1,4 @@
-# ADA - Voice Assistant for Jenny
+# ADA - AI Health Assistant
 
 A voice-enabled AI companion designed for elderly care, providing continuous voice conversations with automatic check-ins and family contact access.
 
